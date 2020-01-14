@@ -20,7 +20,7 @@ HunterGate(
 
 
 # TODO: rename project and delete this comment
-project(template)
+project(lab_04_boost_filesysytem)
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
@@ -28,25 +28,41 @@ string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
 
-# TODO: change template word to project name and delete this comment
-add_library(template STATIC
-  # enum your files and delete this comment
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/source.cpp
-)
+hunter_add_package(Boost COMPONENTS filesystem regex)
+hunter_add_package(Boost COMPONENTS system regex)
+find_package(Boost CONFIG REQUIRED filesystem regex)
+find_package(Boost CONFIG REQUIRED system regex)
+
+
 add_executable(tests
-  # TODO: enum your files and delete this comment
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test.cpp
 )
 
-# TODO: change template word to project name and delete this comment
-target_include_directories(template 
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+
+add_executable(
+        lab_04_boost_filesysytem                              # Название цели
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/main.cpp
+        )
+
+target_link_libraries(
+        tests
+        ${CMAKE_THREAD_LIBS_INIT}
+        GTest::gtest
+        GTest::main
 )
-target_include_directories(tests 
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-# TODO: change template word to project name and delete this comment
-target_link_libraries(tests GTest::main template)
+
+target_link_libraries( lab_04_boost_filesysytem
+        Boost::filesystem
+        Boost::system
+        )
+
+target_include_directories(lab_04_boost_filesysytem
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+        )
+
+target_include_directories(tests
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+        )
 
 enable_testing()
 add_test(NAME unit_tests COMMAND tests) 
@@ -56,7 +72,7 @@ if(BUILD_COVERAGE)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
   find_package(codecov)
   # TODO: change template word to project name and delete this comment
-  add_coverage(template)
+  add_coverage(lab_04_boost_filesysytem)
   add_coverage(tests)
   list(APPEND LCOV_REMOVE_PATTERNS "'${PROJECT_SOURCE_DIR}/tests/*'")
   coverage_evaluate()
